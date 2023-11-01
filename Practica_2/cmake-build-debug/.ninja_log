@@ -1,0 +1,7 @@
+# ninja log v5
+9	286	7205775854906449	CMakeFiles/Practica_2.dir/Ruta.cpp.obj	656b4840d2eb8f69
+5	715	7205775859196605	CMakeFiles/Practica_2.dir/VuelaFlight.cpp.obj	bd82fa8a73441153
+1	727	7205775859317075	CMakeFiles/Practica_2.dir/main.cpp.obj	f99968d19c4f1163
+2	328	7205776135980622	CMakeFiles/Practica_2.dir/Aeropuerto.cpp.obj	2f3278b96e023be3
+2	243	7205776351325798	CMakeFiles/Practica_2.dir/UTM.cpp.obj	db1f45ddd8c9aca4
+243	326	7205776352124100	Practica_2.exe	24ae5c97752fe96e

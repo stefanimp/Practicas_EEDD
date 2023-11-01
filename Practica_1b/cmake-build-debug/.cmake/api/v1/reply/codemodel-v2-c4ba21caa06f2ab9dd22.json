@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Practica_1b",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Practica_1b::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Practica_1b-Debug-8c5856a26873806b12ab.json",
+					"name" : "Practica_1b",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/stefan/Desktop/Estudios/Uni/Ing_Informatica/2o/2023_2024/1_Cuatri/Estructuras_de_Datos/Practicas/Practica_1b/cmake-build-debug",
+		"source" : "C:/Users/stefan/Desktop/Estudios/Uni/Ing_Informatica/2o/2023_2024/1_Cuatri/Estructuras_de_Datos/Practicas/Practica_1b"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}
