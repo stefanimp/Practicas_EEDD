@@ -12,7 +12,7 @@ Aerolinea::~Aerolinea() {
 VDinamico<Aeropuerto*> Aerolinea::getAeropuertosOrigin() {
     VDinamico<Aeropuerto*> aeropuertosOrigen;
     for (int i = 0; i < aerorutes.tamLogigo(); ++i) {
-        aeropuertosOrigen.insertar(&(aerorutes.operator[](i)->getOrigin()));
+        aeropuertosOrigen.insertar(&(aerorutes[i]->getOrigin()));
     }
     return aeropuertosOrigen;
 }
