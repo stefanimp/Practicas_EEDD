@@ -511,7 +511,7 @@ void VuelaFlight::eliminarAirport(const std::string &iata) {
 
 
 void VuelaFlight::eliminarAirportsInactivos() {
-    for (std::unordered_map<std::string, Aeropuerto>::iterator iterator; iterator != airports.end(); ++iterator) {
+    for (std::unordered_map<std::string, Aeropuerto>::iterator iterator = airports.begin(); iterator != airports.end(); ++iterator) {
         if (iterator->second.getTipo() == "closed"){
             eliminarAirport(iterator->second.getIata());
         }
