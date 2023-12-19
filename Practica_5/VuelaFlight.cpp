@@ -477,7 +477,7 @@ void VuelaFlight::eliminarAirportsInactivos() {
         Aeropuerto *airport = &airports[i];
         if(airport){
             if (airport->getTipo() == "closed"){
-                airports.borrarCuadratica(airport->getIata());
+                eliminarAirport(airport->getIata());
             }
         }
     }
