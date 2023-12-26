@@ -211,7 +211,6 @@ VuelaFlight::VuelaFlight(std::ifstream &fichAirports, std::ifstream &fichAerolin
     } else {
         std::cout << "Error de apertura en archivo" << std::endl;
     }
-    airportsUTM = MallaRegular<Aeropuerto*>(xMin, yMin, xMax, yMax, 73);
     rellenaMalla(xMin, xMax, yMin, yMax);
 
     std::cout<<"Cantidad de aeropuertos cargados: " <<airports.size() <<std::endl;
@@ -238,7 +237,7 @@ unsigned long VuelaFlight::funcionHash(const std::string &iata) {
  * @post    Un nuevo aeropuerto es añadido
  * */
 void VuelaFlight::addAeropuerto(const Aeropuerto &aeropuerto) {
-    airports.insert(std::make_pair(aeropuerto.getIata(),aeropuerto));
+     airports.insert(std::make_pair(aeropuerto.getIata(),aeropuerto));
 }
 
 
@@ -311,7 +310,6 @@ Ruta* VuelaFlight::addNewRute(const std::string &idAerOrig, const std::string &i
     // Creo la ruta que será añadida
     Ruta rutanueva;
     // Creo los objetos necesarios para realizar las comparaciones
-    Aeropuerto aeropComprobacion;
 
     //Recordamos que en los maps se busca por el first
     std::map<std::string, Aerolinea>::iterator iterator = aerolines.find(aerolin);
@@ -320,21 +318,22 @@ Ruta* VuelaFlight::addNewRute(const std::string &idAerOrig, const std::string &i
     }
     rutanueva.setCompany((iterator)->second);
 
-    aeropComprobacion.setIata(idAerOrig);
+    // Buscamos el aeropuerto origen
     std::unordered_map<std::string, Aeropuerto>::iterator iteratorAirportOrig = airports.find(idAerOrig);
     if(iteratorAirportOrig == airports.end()){
         return nullptr;
     }
     rutanueva.setOrigin(iteratorAirportOrig->second);
 
-    aeropComprobacion.setIata(idAerDest);
+    // Buscamos el aeropuerto destino
     std::unordered_map<std::string, Aeropuerto>::iterator iteratorAirportDest = airports.find(idAerDest);
     if(iteratorAirportDest == airports.end()){
         return nullptr;
     }
+
     std::multimap<std::string, Ruta*>::iterator iteratorRoutesDest = routesDest.begin();
     Ruta *rutaP = iteratorRoutesDest->second;
-    rutanueva.setDestination(iteratorAirportOrig->second);
+    rutanueva.setDestination(iteratorAirportDest->second);
 
     std::multimap<std::string, Ruta>::iterator iteratorRoutesOrigin = routesOrigin.insert(std::pair<std::string, Ruta>(rutanueva.getOrigin()->getIata(),rutanueva));
     routesDest.insert(std::pair<std::string, Ruta*>(iteratorRoutesOrigin->first,&(iteratorRoutesOrigin->second)));
@@ -390,10 +389,6 @@ bool VuelaFlight::registrarVuelo(const std::string flightNum, const std::string 
     if(iteradorAirportDest == airports.end()){
         return false;
     }
-
-    Aeropuerto aeroComprobacion;
-    aeroComprobacion.setIata(iataAeroOrig);
-    aeroComprobacion.setIata(iataAeroDest);
 
     //Creamos el vuelo y cargamos todos los datos
     Vuelo newFlight;
@@ -499,24 +494,65 @@ void VuelaFlight::eliminarAirport(const std::string &iata) {
         // Hacemos esto porque en los multimap los objetos con igual identificador se almacenan en posiciones contiguas de memoria
         while (iteratorRoutesOrigin->first == iata){
             iteratorRoutesOrigin->second.getCompany().bajaAeropuerto(iata);
-            routesOrigin.erase(iteratorRoutesOrigin);
-            routesDest.erase(iteratorRoutesDest);
-            ++iteratorRoutesOrigin;
-            ++iteratorRoutesDest;
+            iteratorRoutesOrigin = routesOrigin.erase(iteratorRoutesOrigin);
+            iteratorRoutesDest = routesDest.erase(iteratorRoutesDest);
         }
-    }
-    airports.erase(iata);
 
+    }
+    std::unordered_map<std::string, Aeropuerto>::iterator aeropuerto = airports.find(iata);
+    airportsUTM.borrar(aeropuerto->second.getX(), aeropuerto->second.getY(),&aeropuerto->second);
+    airports.erase(iata);
 }
 
 
 void VuelaFlight::eliminarAirportsInactivos() {
-    for (std::unordered_map<std::string, Aeropuerto>::iterator iterator = airports.begin(); iterator != airports.end(); ++iterator) {
-        if (iterator->second.getTipo() == "closed"){
-            eliminarAirport(iterator->second.getIata());
+    std::unordered_map<std::string, Aeropuerto>::iterator iteratorAirports = airports.begin();
+    while (iteratorAirports != airports.end()){
+        if (iteratorAirports->second.getTipo() == "closed"){
+            std::unordered_map<std::string, Aeropuerto>::iterator iteratorAirports2 = iteratorAirports;
+            ++iteratorAirports;
+            eliminarAirport(iteratorAirports2->second.getIata());
+        }else{
+            ++iteratorAirports;
         }
     }
 }
+
+std::vector<Aeropuerto*> VuelaFlight::buscarAriportsRadio(const UTM &pos, float radioKm) {
+    std::vector<Aeropuerto*> vectorAirports = airportsUTM.buscarRadio(pos.getLongitud(), pos.getLatitud(), radioKm);
+
+        return vectorAirports;
+}
+
+std::list<Aeropuerto *> VuelaFlight::airportsMasSalidas(const UTM &pos, float radioKm) {
+    std::vector<Aeropuerto*> vectorAirports = airportsUTM.buscarRadio(pos.getLongitud(), pos.getLatitud(), radioKm);
+    std::priority_queue<VuelaFlight::AirportsFlights, std::vector<VuelaFlight::AirportsFlights>, std::less<VuelaFlight::AirportsFlights>> airportQueue;
+    std::list<Aeropuerto*> listAirportsDef;
+
+    for (int i = 0; i < vectorAirports.size(); ++i) {
+        int numFlights = 0;
+        std::list<Ruta*> listRuotes = buscarRutasOrigen(vectorAirports[i]->getIata());
+        std::list<Ruta*>::iterator iteratorListRoutes = listRuotes.begin();
+        while (iteratorListRoutes != listRuotes.end()){
+            numFlights += (*iteratorListRoutes)->getNumFlights();
+            ++ iteratorListRoutes;
+        }
+        AirportsFlights airpflgt(*vectorAirports[i], numFlights);
+        airportQueue.push(airpflgt);
+    }
+    for (int i = 0; i < 5 && i <= airportQueue.size(); ++i) {
+        listAirportsDef.push_back(airportQueue.top().airport);
+        airportQueue.pop();
+    }
+    return listAirportsDef;
+
+}
+
+void VuelaFlight::addAirportPostConst(const Aeropuerto &airport) {
+    airports.insert(std::make_pair(airport.getIata(),airport));
+    airportsUTM.insertar(airport.getX(), airport.getY(), this->buscaAeropuertoIata(airport.getIata()));
+}
+
 
 
 void VuelaFlight::mostrarEstadoTabla() const {
@@ -530,5 +566,17 @@ void VuelaFlight::mostrarEstadoTabla() const {
     std::cout<<"Numero maximo de colisiones " <<" | " <<airports.max_load_factor() <<std::endl;
     std::cout<<"====================================================" <<std::endl;
     std::cout<<"Factor de carga             " <<" | " <<airports.load_factor() <<std::endl;
+    std::cout<<"====================================================" <<std::endl;
+}
+
+void VuelaFlight::mostrarEstadoMalla() const {
+    std::cout<<"====================================================" <<std::endl;
+    std::cout<<"Estado de la malla que almacena los aeropuertos" <<std::endl;
+    std::cout<<"====================================================" <<std::endl;
+    std::cout<<"Numero de elementos:          " <<" | " <<airportsUTM.getnumElementos() <<std::endl;
+    std::cout<<"====================================================" <<std::endl;
+    std::cout<<"Media de elementos por celda: " <<" | " <<airportsUTM.promedioElementosPorCelda() <<std::endl;
+    std::cout<<"====================================================" <<std::endl;
+    std::cout<<"Max. elementos por celda:     " <<" | " <<airportsUTM.maxElementosPorCelda() <<std::endl;
     std::cout<<"====================================================" <<std::endl;
 }

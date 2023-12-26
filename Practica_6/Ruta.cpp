@@ -4,8 +4,6 @@
 
 #include "Ruta.h"
 
-
-//TODO quizas añadir  aqui una excepcion que si el origin o el destination estan vacios no se pude crear el objeto
 /**
  * @brief   Constructor parametrizado de la clase Ruta
  * @details Da valores a los atributos aerolinea, origin y detination
@@ -73,7 +71,7 @@ bool Ruta::existeAeropuerto(const std::string &iata) {
 }
 
 bool Ruta::addVuelo(Vuelo &vuelo) {
-    if(vuelo.getAeropuertoOrigin() == origin && vuelo.getAeropuertoDestino() == destination && vuelo.getAerolinea() == company){
+   if(&*vuelo.getAeropuertoOrigin() == &*this->origin && &*vuelo.getAeropuertoDestino() == &*this->destination && &*vuelo.getAerolinea() == &*this->company){
         flightRoute.push_back(&(vuelo));
         return true;
     }
@@ -84,7 +82,6 @@ long Ruta::getNumFlights() const {
     return flightRoute.size();
 }
 
-//TODO así está bien?
 std::list<Vuelo *> Ruta::getFlights() {
     return flightRoute;
 

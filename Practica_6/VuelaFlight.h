@@ -13,18 +13,41 @@
 #include <list>
 #include <map>
 #include <set>
+#include <queue>
 #include <unordered_map>
 #include <algorithm>
 #include <sstream>
 
 class VuelaFlight{
 private:
+
+    class AirportsFlights{
+    public:
+        Aeropuerto *airport = nullptr;
+        int numFlights = 0;
+
+        AirportsFlights(Aeropuerto &airport, const int numFlights):airport(&airport), numFlights(numFlights){
+        }
+
+        ~AirportsFlights(){
+            airport = nullptr;
+        };
+        bool operator>(const AirportsFlights &orig) const{
+            return (this->numFlights > orig.numFlights);
+        }
+        bool operator<(const AirportsFlights &orig) const{
+            return (this->numFlights < orig.numFlights);
+        }
+
+    };
+
     std::unordered_map<std::string, Aeropuerto> airports;
     MallaRegular<Aeropuerto*> airportsUTM;
     std::multimap<std::string, Ruta> routesOrigin;  // La clave es el codigo IATA del aeropuerto origen
     std::multimap<std::string, Ruta*> routesDest;   // La clave es el codigo IATA del aeropuerto destinos
     std::map<std::string, Aerolinea> aerolines; // La calve es el ICAO de la aerolinea
     void rellenaMalla(float xMin, float xMax, float yMin, float yMax){
+        airportsUTM = MallaRegular<Aeropuerto*>(xMin, yMin, xMax, yMax, 80);
         for (std::unordered_map<std::string, Aeropuerto>::iterator iteratorAirports = airports.begin(); iteratorAirports != airports.end() ; ++iteratorAirports) {
             airportsUTM.insertar(iteratorAirports->second.getX(),iteratorAirports->second.getY(),&iteratorAirports->second);
         }
@@ -54,7 +77,12 @@ public:
     std::list<Aeropuerto*> getAeropuertos();
     void eliminarAirport(const std::string &iata);
     void eliminarAirportsInactivos();
+    std::vector<Aeropuerto*> buscarAriportsRadio(const UTM &pos, float radioKm);
+    std::list<Aeropuerto*> airportsMasSalidas(const UTM &pos, float radioKm);
+    void addAirportPostConst(const Aeropuerto &airport);
     void mostrarEstadoTabla() const;
+    void mostrarEstadoMalla() const;
+
 };
 
 #endif //PRACTICA_1B_VUELAFLIGHT_H

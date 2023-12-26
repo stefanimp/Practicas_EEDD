@@ -453,7 +453,7 @@ std::list<Aeropuerto *> VuelaFlight::getAeropuertos() {
     return listAirports;
 }
 
-//TODO revisar este metodo
+
 void VuelaFlight::eliminarAirport(const std::string &iata) {
     std::multimap<std::string, Ruta>::iterator iteratorRoutesOrigin = routesOrigin.find(iata);
     std::multimap<std::string, Ruta*>::iterator iteratorRoutesDest = routesDest.find(iata);
@@ -471,7 +471,7 @@ void VuelaFlight::eliminarAirport(const std::string &iata) {
 
 }
 
-//TODO comprobar este metodo
+
 void VuelaFlight::eliminarAirportsInactivos() {
     for (int i = 0; i < airports.getTamTabla(); ++i) {
         Aeropuerto *airport = &airports[i];

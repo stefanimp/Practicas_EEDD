@@ -77,21 +77,21 @@ bool Aerolinea::isAvtivo() const {
     return activo;
 }
 
-//TODO  comprobar si falta asñgo de este método y asegurarse de que se usa bien vuelaflight
-//TODO ver si se pude optimizar este método y el leer de vuela flight
 Vuelo *Aerolinea::addVuelo(Vuelo &vuelo) {
+    // Comprobamos que el vuelo existe y que pertenece a esta areolinea
     if(&vuelo == nullptr || vuelo.getAerolinea() != this){
         return nullptr;
     }
 
+    // Insertamos el vuelo en el multimap de vuelos de la aerolinea
     std::multimap<std::string, Vuelo>::iterator iteratorNewFlight = flights.insert(std::pair<std::string, Vuelo>(vuelo.getFlightNumb(), vuelo));
 
+    //
     bool encontrado = false;
     std::deque<Ruta*>::iterator iteratorRoutes = aerorutes.begin();
     while (iteratorRoutes != aerorutes.end() && !encontrado){
         if ((*iteratorRoutes)->getOrigin() == vuelo.getAeropuertoOrigin() && (*iteratorRoutes)->getDestination() == vuelo.getAeropuertoDestino() && &(*iteratorRoutes)->getCompany() == vuelo.getAerolinea()){
             encontrado = true;
-            //TODO si no va probar con vuelo en vez del oiterador al añadir a la ruta
             (*iteratorRoutes)->addVuelo(iteratorNewFlight->second);
         }
         ++iteratorRoutes;
@@ -100,7 +100,7 @@ Vuelo *Aerolinea::addVuelo(Vuelo &vuelo) {
     return &iteratorNewFlight->second;
 }
 
-//TODO comprobar que este método funcione. Es buena solución devolver una lista de punteros a Vuelos?
+
 std::list<Vuelo*> Aerolinea::getVuelos(const std::string &flightNum) {
     std::list<Vuelo*> listFlights;
     std::multimap<std::string, Vuelo>::iterator iteratorFlights = flights.find(flightNum);
@@ -111,7 +111,7 @@ std::list<Vuelo*> Aerolinea::getVuelos(const std::string &flightNum) {
     return listFlights;
 }
 
-//TODO está bien? Es una buena solución devolver una lista de punteros a vuelos?
+
 std::list<Vuelo*> Aerolinea::getVuelos(const Fecha &fechIni, const Fecha &fechFin) {
     std::list<Vuelo*> listFlights;
     std::multimap<std::string, Vuelo>::iterator iteratorFlights = flights.begin();
@@ -132,17 +132,19 @@ void Aerolinea::bajaAeropuerto(const std::string &iataAirport) {
     std::multimap<std::string, Vuelo>::iterator iteratorFlights = flights.begin();
     while(iteratorFlights != flights.end()){
         if(iteratorFlights->second.getAeropuertoDestino()->getIata() == iataAirport || iteratorFlights->second.getAeropuertoOrigin()->getIata() == iataAirport){
-            flights.erase(iteratorFlights);
+            iteratorFlights = flights.erase(iteratorFlights);
+        }else {
+            ++iteratorFlights;
         }
-        ++iteratorFlights;
     }
 
     std::deque<Ruta *>::iterator iteratorRoutes = aerorutes.begin();
     while (iteratorRoutes != aerorutes.end()) {
         if ((*iteratorRoutes)->getOrigin()->getIata() == iataAirport || (*iteratorRoutes)->getDestination()->getIata() == iataAirport) {
-            aerorutes.erase(iteratorRoutes);
+            iteratorRoutes = aerorutes.erase(iteratorRoutes);
+        }else{
+            ++iteratorRoutes;
         }
-        ++iteratorRoutes;
     }
 
 }
