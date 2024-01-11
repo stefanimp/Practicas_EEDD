@@ -315,7 +315,7 @@ ListaEnlazada<T> &ListaEnlazada<T>::operator=(const ListaEnlazada<T> &original) 
 template<typename T>
 void ListaEnlazada<T>::insertarInicio(const T &dato) {
     Nodo *nuevo = new Nodo(dato, cabecera);
-    if(cola == nullptr){
+    if(cola == nullptr){ // Si la lista está vacia
         cola = nuevo;
     }
     cabecera = nuevo;
