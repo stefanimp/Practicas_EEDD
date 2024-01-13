@@ -414,8 +414,6 @@ void ListaEnlazada<T>::borrarFinal() {
 
 template<typename T>
 void ListaEnlazada<T>::borrar(const Iterador &iterador) {
-
-    //CON NODO
     if (iterador.nodo == cabecera){
         Nodo *borrado = cabecera;
         cabecera = cabecera->siguiente;
