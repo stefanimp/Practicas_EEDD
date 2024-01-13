@@ -183,7 +183,7 @@ public:
 
     /**
      * @brief   Borra el nodo sitiado en el inicio de la lista enlazada
-     * @details Borra el nodo sitiado en el inicio de la lista enlazada coon un coste de O(1). El valor del atributo tam se decrementa en una unidad.
+     * @details Borra el nodo sitiado en el inicio de la lista enlazada coon un coste de O(n). El valor del atributo tam se decrementa en una unidad.
      * @post    El nodo queda eliminado
      * */
     void borrarIncicio();
