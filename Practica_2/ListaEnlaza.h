@@ -183,7 +183,7 @@ public:
 
     /**
      * @brief   Borra el nodo sitiado en el inicio de la lista enlazada
-     * @details Borra el nodo sitiado en el inicio de la lista enlazada coon un coste de O(1). El valor del atributo tam se decrementa en una unidad.
+     * @details Borra el nodo sitiado en el inicio de la lista enlazada coon un coste de O(n). El valor del atributo tam se decrementa en una unidad.
      * @post    El nodo queda eliminado
      * */
     void borrarIncicio();
@@ -197,8 +197,8 @@ public:
 
     /**
      * @brief   Borrar el elemento sitiado el la posición indicada por el iterador
-     * @details Si no se encuentra el nodo que se quiere borrar, ninguno será borrado. El valor del atributo tam se decrementa en una unidad.
-     * @pre     El dato del iterador pasado como parámetro debe pertenecer a la lista.
+     * @details Coste O(n). Si no se encuentra el nodo que se quiere borrar, ninguno será borrado. El valor del atributo tam se decrementa en una unidad.
+     * @pre     El dato del iterador pasado como parámetro debe pertenecer a la lista,ya que si no estaremos haciendo una opreracíon O(n).
      * @warning Si la precondición deja de existir, deberemos modificar la condición de parada del bucle while para que pare si llega el final de la lista.
      * @post    El elemento queda eliminado
      * */
@@ -315,7 +315,7 @@ ListaEnlazada<T> &ListaEnlazada<T>::operator=(const ListaEnlazada<T> &original) 
 template<typename T>
 void ListaEnlazada<T>::insertarInicio(const T &dato) {
     Nodo *nuevo = new Nodo(dato, cabecera);
-    if(cola == nullptr){
+    if(cola == nullptr){ // Si la lista está vacia
         cola = nuevo;
     }
     cabecera = nuevo;
@@ -414,8 +414,6 @@ void ListaEnlazada<T>::borrarFinal() {
 
 template<typename T>
 void ListaEnlazada<T>::borrar(const Iterador &iterador) {
-
-    //CON NODO
     if (iterador.nodo == cabecera){
         Nodo *borrado = cabecera;
         cabecera = cabecera->siguiente;
