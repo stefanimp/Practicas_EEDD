@@ -187,12 +187,12 @@ int AVL<T>::inserta(Nodo *&nodoInicial, T &dato) {
     Nodo *auxiliar = nodoInicial; // Igualamos el nodo auxiliar a nodoInicial
     int deltaH = 0;
 
-    if(!auxiliar){ //Si no hay nada en el nodoInicial, es decir, hemos llegado a una hoja
+    if(!auxiliar){ //Si no hay nada en el nodoInicial, es decir, hemos llegado a una hoja o no había nada en el árbol.
         auxiliar = new Nodo(dato); // Creamos un nuevo nodo con el dato
         nodoInicial = auxiliar;
         ++numElementos;
         deltaH = 1;
-    } else if(dato > auxiliar->dato){ // Si es igual a 0
+    } else if(dato > auxiliar->dato){ // Si el dato es mayor que el dato del uxiliar(nodoinicial)
         if(inserta(auxiliar->derch, dato)){
             auxiliar->balance--;
             if (auxiliar->balance == -1){

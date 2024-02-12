@@ -48,26 +48,53 @@ Aeropuerto::~Aeropuerto() {
 
 }
 
+/**
+ * @brief   Devuelve el valor del atributo ID.
+ * @return  El valor del atributo ID.
+ * */
 const std::string &Aeropuerto::getId() const {
     return id;
 }
 
+/**
+ * @brief   Modifica el valor del atributo ID.
+ * @param[in]id Nuevo valor que tendrá el atributo ID.
+ * @post    El atributo ID queda modificado.
+ * */
 void Aeropuerto::setId(const std::string &id) {
     this->id = id;
 }
 
+/**
+ * @brief   Devuelve el valor del atributo ident.
+ * @return El valor del atributo ident.
+ * */
 const std::string &Aeropuerto::getIdent() const {
     return ident;
 }
 
+/**
+ * @brief   Modifica el valor del atributo ident.
+ * @param[in]ident  Nuevo valor que tendrá el atributo ident.
+ * @post    El atributo ident queda modificado.
+ * */
 void Aeropuerto::setIdent(const std::string &ident) {
     this->ident = ident;
 }
 
+/**
+ * @brief   Devuelve el valor del atributo tipo.
+ * @return  El valor del atributo tipo.
+ * */
 const std::string &Aeropuerto::getTipo() const {
     return tipo;
 }
 
+/**
+ * @brief   Modifica el valor del atributo tipo.
+ * @param[in]tipo   Nuevo valor que tendrá el atributo tipo.
+ * @post    El atributo tipo queda modificado.
+ * */
 void Aeropuerto::setTipo(const std::string &tipo) {
     this->tipo = tipo;
 }
